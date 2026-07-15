@@ -147,6 +147,113 @@
     display: none;
   }
 
+  /* ---- Risk factor panel ---- */
+  .risk-toggle{
+    margin: -22px 0 24px;
+  }
+  .risk-toggle label{
+    display: inline-flex;
+    align-items: center;
+    gap: 9px;
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--text-dim);
+    cursor: pointer;
+    letter-spacing: 0.02em;
+  }
+  .risk-toggle input[type="checkbox"]{
+    appearance: none;
+    width: 15px; height: 15px;
+    border: 1px solid var(--panel-line);
+    border-radius: 3px;
+    background: var(--panel);
+    cursor: pointer;
+    position: relative;
+    flex-shrink: 0;
+  }
+  .risk-toggle input[type="checkbox"]:checked{
+    background: var(--teal);
+    border-color: var(--teal);
+  }
+  .risk-toggle input[type="checkbox"]:checked::after{
+    content: "✓";
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 11px;
+    color: #06171A;
+    font-weight: 700;
+  }
+  .risk-toggle input[type="checkbox"]:focus-visible{
+    outline: 2px solid var(--amber);
+    outline-offset: 2px;
+  }
+
+  .risk-panel{
+    display: none;
+    background: var(--panel);
+    border: 1px solid var(--panel-line);
+    border-radius: 6px;
+    padding: 22px;
+    margin: -4px 0 24px;
+  }
+  .risk-panel-title{
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.14em;
+    color: var(--text-faint);
+    text-transform: uppercase;
+    margin-bottom: 16px;
+  }
+  .risk-grid{
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 14px;
+    margin-bottom: 18px;
+  }
+  .risk-field label{
+    display: block;
+    font-size: 13px;
+    color: var(--text);
+    margin-bottom: 7px;
+  }
+  .risk-field select{
+    width: 100%;
+    background: var(--bg);
+    border: 1px solid var(--panel-line);
+    border-radius: 4px;
+    color: var(--text);
+    font-family: var(--thai);
+    font-size: 13px;
+    padding: 9px 10px;
+    outline: none;
+    cursor: pointer;
+  }
+  .risk-field select:focus{
+    border-color: var(--teal);
+    box-shadow: 0 0 0 3px rgba(79,216,196,0.15);
+  }
+  .risk-disclaimer{
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--text-faint);
+    line-height: 1.7;
+    border-top: 1px solid var(--panel-line);
+    padding-top: 14px;
+  }
+  .risk-disclaimer b{ color: var(--coral); font-weight: 600; }
+
+  .adj-breakdown{
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--text-faint);
+    margin-top: 8px;
+    line-height: 1.6;
+  }
+  .adj-breakdown b{ color: var(--teal); }
+
   /* ---- Hero ticker ---- */
   #result{ display: none; }
 
@@ -346,6 +453,96 @@
     </div>
     <div id="error-msg">⚠ กรุณาเลือกวันเกิดที่ไม่ใช่วันในอนาคต</div>
 
+    <div class="risk-toggle">
+      <label><input type="checkbox" id="risk-toggle-cb"> เพิ่มปัจจัยพฤติกรรมเสี่ยงแบบละเอียด เพื่อปรับผลการวิเคราะห์ให้ใกล้เคียงความจริงมากขึ้น (ไม่บังคับ)</label>
+    </div>
+
+    <div class="risk-panel" id="risk-panel">
+      <div class="risk-panel-title">RISK PROFILE · ปัจจัยพฤติกรรมที่ส่งผลต่อการประมาณอายุขัย</div>
+      <div class="risk-grid">
+        <div class="risk-field">
+          <label for="risk-smoking">การสูบบุหรี่</label>
+          <select id="risk-smoking">
+            <option value="0" selected>ไม่เคยสูบ</option>
+            <option value="-2">เคยสูบ แต่เลิกแล้ว</option>
+            <option value="-4">สูบเป็นครั้งคราว</option>
+            <option value="-10">สูบเป็นประจำทุกวัน</option>
+          </select>
+        </div>
+        <div class="risk-field">
+          <label for="risk-alcohol">การดื่มแอลกอฮอล์</label>
+          <select id="risk-alcohol">
+            <option value="0" selected>ไม่ดื่ม</option>
+            <option value="0.5">ดื่มเล็กน้อย นาน ๆ ครั้ง</option>
+            <option value="-1">ดื่มปานกลาง รายสัปดาห์</option>
+            <option value="-5">ดื่มหนัก เกือบทุกวัน</option>
+          </select>
+        </div>
+        <div class="risk-field">
+          <label for="risk-exercise">การออกกำลังกาย</label>
+          <select id="risk-exercise">
+            <option value="-3">แทบไม่ออกกำลังกายเลย</option>
+            <option value="0" selected>ออกบ้างเป็นครั้งคราว</option>
+            <option value="3">สม่ำเสมอ 3–5 วัน/สัปดาห์</option>
+            <option value="4">เป็นประจำแทบทุกวัน</option>
+          </select>
+        </div>
+        <div class="risk-field">
+          <label for="risk-sleep">ชั่วโมงการนอนเฉลี่ยต่อคืน</label>
+          <select id="risk-sleep">
+            <option value="-3">น้อยกว่า 5 ชม.</option>
+            <option value="-1">5–6 ชม.</option>
+            <option value="2" selected>7–9 ชม.</option>
+            <option value="-1">มากกว่า 9 ชม.</option>
+          </select>
+        </div>
+        <div class="risk-field">
+          <label for="risk-diet">คุณภาพอาหารโดยรวม</label>
+          <select id="risk-diet">
+            <option value="-3">ส่วนใหญ่เป็นอาหารแปรรูป/ฟาสต์ฟู้ด</option>
+            <option value="0" selected>คละกันไป ปานกลาง</option>
+            <option value="2">เน้นผัก ผลไม้ ทำอาหารเองบ่อย</option>
+            <option value="3">สมดุลดีมากและสม่ำเสมอ</option>
+          </select>
+        </div>
+        <div class="risk-field">
+          <label for="risk-stress">ระดับความเครียดในชีวิตประจำวัน</label>
+          <select id="risk-stress">
+            <option value="1">ต่ำ ผ่อนคลายสม่ำเสมอ</option>
+            <option value="0" selected>ปานกลาง</option>
+            <option value="-2">สูง</option>
+            <option value="-4">สูงมาก / เรื้อรัง</option>
+          </select>
+        </div>
+        <div class="risk-field">
+          <label for="risk-sedentary">ลักษณะการทำงาน / การเคลื่อนไหวระหว่างวัน</label>
+          <select id="risk-sedentary">
+            <option value="-2">นั่งนาน 8+ ชม./วัน แทบไม่ลุกเดิน</option>
+            <option value="0" selected>ผสมผสาน ลุกเดินบ้าง</option>
+            <option value="1">เคลื่อนไหวร่างกายตลอดวัน</option>
+          </select>
+        </div>
+        <div class="risk-field">
+          <label for="risk-checkup">การตรวจสุขภาพประจำปี</label>
+          <select id="risk-checkup">
+            <option value="1" selected>ตรวจเป็นประจำทุกปี</option>
+            <option value="-1">ไม่ค่อยได้ตรวจ</option>
+          </select>
+        </div>
+        <div class="risk-field">
+          <label for="risk-genetics">ประวัติสุขภาพในครอบครัว</label>
+          <select id="risk-genetics">
+            <option value="-2">มีประวัติโรคร้ายแรง/เสียชีวิตเร็วในครอบครัว</option>
+            <option value="0" selected>ไม่แน่ใจ หรือปานกลาง</option>
+            <option value="2">ครอบครัวมีประวัติอายุยืน</option>
+          </select>
+        </div>
+      </div>
+      <div class="risk-disclaimer">
+        <b>หมายเหตุ:</b> ตัวเลขปรับค่าที่ใช้อ้างอิงจากแนวโน้มทางสถิติกว้าง ๆ ที่มีการพูดถึงทั่วไป (เช่น ผลของการสูบบุหรี่หรือการออกกำลังกายต่ออายุขัยเฉลี่ยของประชากร) ใช้เพื่อความเพลิดเพลินและสร้างความตระหนักเท่านั้น <b>ไม่ใช่แบบจำลองทางการแพทย์หรือการพยากรณ์ที่แม่นยำ</b> ไม่ได้คำนึงถึงพันธุกรรม สภาพแวดล้อม หรือปัจจัยเฉพาะบุคคลอื่น ๆ อีกมากมาย หากต้องการประเมินสุขภาพจริง ควรปรึกษาแพทย์
+      </div>
+    </div>
+
     <div id="result">
 
       <div class="ticker-panel">
@@ -370,7 +567,8 @@
           <div class="pct" id="life-pct">0%</div>
         </div>
         <div class="bar-track"><div class="bar-fill" id="life-bar"></div></div>
-        <div class="life-note">อ้างอิงจากอายุขัยเฉลี่ยทั่วโลกที่ราว 72.6 ปี (ข้อมูลสถิติกว้าง ๆ เพื่อความเพลิดเพลิน ไม่ใช่การพยากรณ์หรือคำแนะนำทางการแพทย์ — อายุขัยจริงขึ้นอยู่กับหลายปัจจัยและแตกต่างกันในแต่ละบุคคล)</div>
+        <div class="adj-breakdown" id="adj-breakdown"></div>
+        <div class="life-note">อ้างอิงจากอายุขัยเฉลี่ยทั่วโลกที่ราว 72.6 ปี (ข้อมูลสถิติกว้าง ๆ เพื่อความเพลิดเพลิน ไม่ใช่การพยากรณ์หรือคำแนะนำทางการแพทย์ — อายุขัยจริงขึ้นอยู่กับหลายปัจจัยและแตกต่างกันในแต่ละบุคคล เปิด "ปัจจัยพฤติกรรมเสี่ยง" ด้านบนเพื่อดูค่าประมาณที่ปรับตามพฤติกรรม)</div>
       </div>
 
     </div>
@@ -429,11 +627,43 @@
     `).join('');
 
     // life expectancy comparison — framed as light statistical reference, capped at 100%
-    const GLOBAL_LIFE_EXPECTANCY = 72.6;
-    const pct = Math.min(100, (totalYears / GLOBAL_LIFE_EXPECTANCY) * 100);
+    const BASE_LIFE_EXPECTANCY = 72.6;
+    const breakdownEl = document.getElementById('adj-breakdown');
+    let targetExpectancy = BASE_LIFE_EXPECTANCY;
+
+    if (riskToggle.checked){
+      const adj = getRiskAdjustment();
+      // clamp to a sane illustrative range so the estimate never feels absolute
+      targetExpectancy = Math.max(45, Math.min(95, BASE_LIFE_EXPECTANCY + adj));
+      const sign = adj >= 0 ? '+' : '';
+      breakdownEl.style.display = 'block';
+      breakdownEl.innerHTML = `พื้นฐาน <b>${BASE_LIFE_EXPECTANCY}</b> ปี · ปรับตามพฤติกรรม <b>${sign}${adj.toFixed(1)}</b> ปี → ค่าประมาณ <b>${targetExpectancy.toFixed(1)}</b> ปี (เป็นภาพประกอบ ไม่ใช่ตัวเลขที่แน่นอน)`;
+    } else {
+      breakdownEl.style.display = 'none';
+      breakdownEl.innerHTML = '';
+    }
+
+    const pct = Math.min(100, (totalYears / targetExpectancy) * 100);
     document.getElementById('life-pct').textContent = pct.toFixed(1) + '%';
     document.getElementById('life-bar').style.width = pct + '%';
   }
+
+  const riskToggle = document.getElementById('risk-toggle-cb');
+  const riskPanel = document.getElementById('risk-panel');
+  const riskSelectIds = ['risk-smoking','risk-alcohol','risk-exercise','risk-sleep','risk-diet','risk-stress','risk-sedentary','risk-checkup','risk-genetics'];
+
+  function getRiskAdjustment(){
+    return riskSelectIds.reduce((sum, id) => sum + parseFloat(document.getElementById(id).value || 0), 0);
+  }
+
+  riskToggle.addEventListener('change', () => {
+    riskPanel.style.display = riskToggle.checked ? 'block' : 'none';
+    if (birthDate) tick();
+  });
+
+  riskSelectIds.forEach(id => {
+    document.getElementById(id).addEventListener('change', () => { if (birthDate) tick(); });
+  });
 
   function tick(){
     const now = new Date();
